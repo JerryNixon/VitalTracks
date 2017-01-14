@@ -1,66 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Messaging;
+using PushNotificationLibrary;
+using Windows.Networking.PushNotifications;
 
 namespace AscendVitalTracks.UWP.Services
 {
     // Install-Package WindowsAzure.Messaging.Managed
-
-    public class RawNotification
-    {
-        public string Content { get; internal set; }
-    }
-
-    public class PushNotificationSettings
-    {
-        public string HubName { get; set; }
-        public string ConnectionString { get; set; }
-    }
-
     // https://docs.microsoft.com/en-us/azure/notification-hubs/notification-hubs-windows-store-dotnet-get-started-wns-push-notification
 
-    public class PushNotificationService
+    public class PushNotificationService : PushNotificationServiceBase
     {
-        private static Windows.Networking.PushNotifications.PushNotificationChannel _channel;
-        private static Microsoft.WindowsAzure.Messaging.NotificationHub _notificationHub;
-        private static Microsoft.WindowsAzure.Messaging.Registration _registration;
-        private PushNotificationSettings _settings;
+        private string _hubName = "VitalTracksNotificationHub";
+        private string _connString = "Endpoint=sb://vitaltracksnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=oCbtDLkGMN6aXAmgstBd60K8xHa8KCpa53ttA6JWzfU=";
+        private NetworkAvailableHelper _network = new NetworkAvailableHelper();
 
-        public event Windows.Foundation.TypedEventHandler<PushNotificationService, RawNotification> RawNotificationReceived;
+        public override async Task<bool> RegisterAsync()
+        {
+            // is this even possible?
+            if (IsRegistered) return true;
+            if (!await _network.IsInternetAvailable()) return false;
 
-        public PushNotificationService() : this(new PushNotificationSettings
-        {
-            HubName = "VitalTracksNotificationHub",
-            ConnectionString = "Endpoint=sb://vitaltracksnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=oCbtDLkGMN6aXAmgstBd60K8xHa8KCpa53ttA6JWzfU=",
-        })
-        {
-            // empty
-        }
+            // register the channel
+            var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+            var hub = new NotificationHub(_hubName, _connString);
+            var registration = await hub.RegisterNativeAsync(channel.Uri);
 
-        public PushNotificationService(PushNotificationSettings settings)
-        {
-            _settings = settings;
-        }
-
-        public async Task<bool> InitializeAsync()
-        {
-            if (!string.IsNullOrEmpty(_registration?.RegistrationId))
+            // now setup listening
+            if (IsRegistered = !string.IsNullOrEmpty(registration?.RegistrationId))
             {
+                channel.PushNotificationReceived += (s, e) =>
+                {
+                    if (e.RawNotification != null)
+                    {
+                        Send(e.RawNotification.Content);
+                    };
+                };
                 return true;
             }
-            _channel = await Windows.Networking.PushNotifications.PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-            _channel.PushNotificationReceived += (s, e) =>
-            {
-                if (e.RawNotification != null)
-                {
-                    RawNotificationReceived?.Invoke(this, new RawNotification { Content = e.RawNotification.Content });
-                };
-            };
-            _notificationHub = new Microsoft.WindowsAzure.Messaging.NotificationHub(_settings.HubName, _settings.ConnectionString);
-            _registration = await _notificationHub.RegisterNativeAsync(_channel.Uri);
-            return !string.IsNullOrEmpty(_registration.RegistrationId);
+            return false;
         }
     }
 }

@@ -102,6 +102,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\NetworkAvailableHelper.cs" />
     <Compile Include="Services\PushNotificationService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +133,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\PushNotificationLibrary\PushNotificationLibrary.csproj">
+      <Project>{67f9d3a8-f71e-4428-913f-c37ae82cdb24}</Project>
+      <Name>PushNotificationLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AscendVitalTracks\AscendVitalTracks.csproj">
       <Project>{f1304630-21ad-42d7-8ae6-b560d1154b6d}</Project>
       <Name>AscendVitalTracks</Name>
