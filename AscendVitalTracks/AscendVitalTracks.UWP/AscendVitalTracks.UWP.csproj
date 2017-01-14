@@ -103,7 +103,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\NetworkAvailableHelper.cs" />
-    <Compile Include="Services\PushNotificationService.cs" />
+    <Compile Include="Services\ListenerService.cs" />
+    <Compile Include="Services\SenderService.cs" />
+    <Compile Include="Services\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

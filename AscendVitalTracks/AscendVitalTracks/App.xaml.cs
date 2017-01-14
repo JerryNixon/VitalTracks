@@ -11,8 +11,8 @@ namespace AscendVitalTracks
     public partial class App : Application
     {
         // https://developer.xamarin.com/guides/xamarin-forms/dependency-service/introduction/
-        PushNotificationLibrary.IPushNotificationService service
-            = DependencyService.Get<PushNotificationLibrary.IPushNotificationService>();
+        PushNotificationLibrary.IListenerService listener
+            = DependencyService.Get<PushNotificationLibrary.IListenerService>();
 
         public App()
         {
@@ -23,12 +23,12 @@ namespace AscendVitalTracks
 
         private async void SetupPushNotificationsAsync()
         {
-            await service.SetupAsync();
-            Debug.WriteLine($"service.IsSetup={service.IsSetup}");
+            await listener.SetupAsync();
+            Debug.WriteLine($"service.IsSetup={listener.IsSetup}");
 
-            if (service.IsSetup)
+            if (listener.IsSetup)
             {
-                service.Subscribe(this, content =>
+                listener.Subscribe(this, content =>
                 {
                     Debug.WriteLine($"RawNotification={content.Content}");
                 });

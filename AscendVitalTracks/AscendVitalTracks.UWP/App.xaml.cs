@@ -32,7 +32,7 @@ namespace AscendVitalTracks.UWP
 
         private void SetupDependecies()
         {
-            Xamarin.Forms.DependencyService.Register<Services.PushNotificationService>();
+            Xamarin.Forms.DependencyService.Register<Services.ListenerService>();
         }
     }
 }
