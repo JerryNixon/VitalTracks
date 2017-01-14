@@ -1,6 +1,7 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
+    "WindowsAzure.Messaging.Managed": "0.1.7.9",
     "Xamarin.Forms": "2.0.0.6482"
   },
   "frameworks": {
