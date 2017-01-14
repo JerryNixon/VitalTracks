@@ -15,10 +15,10 @@ namespace AscendVitalTracks.UWP.Services
         private string _connString = "Endpoint=sb://vitaltracksnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=oCbtDLkGMN6aXAmgstBd60K8xHa8KCpa53ttA6JWzfU=";
         private NetworkAvailableHelper _network = new NetworkAvailableHelper();
 
-        public override async Task<bool> RegisterAsync()
+        public override async Task<bool> SetupAsync()
         {
             // is this even possible?
-            if (IsRegistered) return true;
+            if (IsSetup) return true;
             if (!await _network.IsInternetAvailable()) return false;
 
             // register the channel
@@ -27,7 +27,7 @@ namespace AscendVitalTracks.UWP.Services
             var registration = await hub.RegisterNativeAsync(channel.Uri);
 
             // now setup listening
-            if (IsRegistered = !string.IsNullOrEmpty(registration?.RegistrationId))
+            if (IsSetup = !string.IsNullOrEmpty(registration?.RegistrationId))
             {
                 channel.PushNotificationReceived += (s, e) =>
                 {

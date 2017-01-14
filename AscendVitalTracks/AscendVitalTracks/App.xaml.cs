@@ -23,14 +23,14 @@ namespace AscendVitalTracks
 
         private async void SetupPushNotificationsAsync()
         {
-            await service.RegisterAsync();
-            Debug.WriteLine($"service.IsRegistered={service.IsRegistered}");
+            await service.SetupAsync();
+            Debug.WriteLine($"service.IsSetup={service.IsSetup}");
 
-            if (service.IsRegistered)
+            if (service.IsSetup)
             {
                 service.Subscribe(this, content =>
                 {
-                    Debug.WriteLine($"Ra6wNotificationReceived={content.Content}");
+                    Debug.WriteLine($"RawNotification={content.Content}");
                 });
             }
         }
