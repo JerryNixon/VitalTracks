@@ -29,7 +29,7 @@ namespace AscendVitalTracks.UWP.Services
             var hub = new NotificationHub(Settings.HubName, Settings.ListenerConnectionString);
             var registration = await hub.RegisterNativeAsync(channel.Uri);
 
-           // now setup listening
+            // now setup listening
             if (IsSetup = !string.IsNullOrEmpty(registration?.RegistrationId))
             {
                 channel.PushNotificationReceived += (s, e) =>

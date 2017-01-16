@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
@@ -21,6 +20,13 @@ namespace AscendVitalTracks.Droid
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
+
+            SetupDependecies();
+        }
+
+        private void SetupDependecies()
+        {
+            Xamarin.Forms.DependencyService.Register<Services.ListenerService>();
         }
     }
 }
